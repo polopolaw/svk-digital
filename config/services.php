@@ -36,5 +36,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'leadbook' => [
+        'host' => env('LEADBOOK_API_HOST', 'https://leadbook.ru/test-task-api'),
+        'token' => env('LEADBOOK_API_TOKEN'),
+    ],
 
 ];

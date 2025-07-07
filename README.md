@@ -11,6 +11,10 @@ make init
 ```
 #### Setup Xdebug in PHPStorm
 1. Go to settings Ctrl+Alt+S -> PHP->Servers hit a button "+"
+2. Setup server name site.test (or change env variable in .env and set your value)
+3. For address use http://127.0.0.1 port 9000
+4. Setup mapping use path for app root in container /var/www/html
+5. Apply settings, run debug listeners and add breakpoints, you are awesome =) 
 
 #### Testing
 ``composer test``

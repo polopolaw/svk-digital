@@ -20,8 +20,6 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     wget \
     lsb-release \
-    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgresql.gpg \
-    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
     && apt-get update && apt-get install -y \
     git \
     unzip \
@@ -34,14 +32,11 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libpng-dev \
     zlib1g-dev \
-    postgresql-client-17 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
     gd \
-    pdo \
-    pdo_pgsql \
     mbstring \
     intl \
     zip \
@@ -51,7 +46,6 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     pcntl \
     php-redis
 
-RUN docker-php-ext-enable pdo_pgsql
 
 FROM base AS local
 

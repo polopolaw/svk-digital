@@ -13,9 +13,6 @@ services:
       - .:/var/www/html
       - ./docker/php/conf.d/local/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug-plus.ini
     command: ["php-fpm"]
-    depends_on:
-      - redis
-      - postgres
     networks:
       - backend
 
@@ -31,78 +28,6 @@ services:
     networks:
       - backend
 
-  postgres_test:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_DB: ${DB_DATABASE:-app}
-      POSTGRES_USER: ${DB_USERNAME:-app}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-testpassword}
-    restart: unless-stopped
-    ports:
-      - "5642:5432"
-    volumes:
-      - postgres_test_data:/var/lib/postgresql/data
-    networks:
-      - backend
-
-  postgres:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_DB: ${DB_DATABASE:-app}
-      POSTGRES_USER: ${DB_USERNAME:-app}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-testpassword}
-    restart: unless-stopped
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - backend
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME:-app}" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  redis:
-    image: redis:alpine
-    volumes:
-      - redis_data:/data
-    networks:
-      - backend
-    restart: unless-stopped
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  queue-worker:
-    build:
-      context: ./docker/app
-    image: app
-    restart: unless-stopped
-    user: "${UID:-5000}:${GID:-5000}"
-    volumes:
-      - ./:/var/www
-    depends_on:
-      - db
-      - redis
-    networks:
-      - backend
-    command: php artisan horizon
-
-  schedule-worker:
-    build:
-      context: ./docker/app
-    image: app
-    restart: unless-stopped
-    user: "${UID:-5000}:${GID:-5000}"
-    volumes:
-      - ./:/var/www
-    depends_on:
-      - db
-    networks:
-      - backend
-    command: php artisan schedule:work
 volumes:
   redis_data:
   postgres_data:

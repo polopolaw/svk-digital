@@ -1,0 +1,150 @@
+openapi: 3.0.0
+info:
+  title: TestApi
+  version: '0.1'
+servers:
+  -
+    url: 'http://127.0.0.1:9000/api/v1'
+    description: 'API v1'
+paths:
+  '/shows/{showId}/events':
+    get:
+      tags:
+        - Мероприятия
+      summary: 'Получить список событий мероприятия'
+      operationId: 61c3f3a49334ec47ad7be45bd7b9c515
+      parameters:
+        -
+          name: showId
+          in: path
+          description: 'ID мероприятия'
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: 'Успешный ответ со списком событий'
+          content:
+            application/json:
+              schema:
+                properties:
+                  response: { type: array, items: { properties: { id: { description: 'ID события', type: integer, example: 46 }, showId: { description: 'ID мероприятия', type: integer, example: 10 }, date: { description: 'Дата и время события', type: string, format: date-time, example: '2019-08-22 20:26:38' } }, type: object } }
+                type: object
+        '500':
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Place #5 not available' }
+                type: object
+  '/events/{eventId}/places':
+    get:
+      tags:
+        - Мероприятия
+      summary: 'Получить список мест события'
+      operationId: b98314ec1e5f2b3435a63e8fef0367f5
+      parameters:
+        -
+          name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: 'Успешный ответ со списком мест'
+          content:
+            application/json:
+              schema:
+                properties:
+                  response: { type: array, items: { properties: { id: { type: integer, example: 1 }, x: { type: number, format: float, example: 0 }, 'y': { type: number, format: float, example: 0 }, width: { type: number, format: float, example: 20 }, height: { type: number, format: float, example: 20 }, is_available: { type: boolean, example: true } }, type: object } }
+                type: object
+  '/events/{eventId}/reserve':
+    post:
+      tags:
+        - Мероприятия
+      summary: 'Забронировать места события'
+      operationId: ce24492a061219c8f01d5879a4818d25
+      parameters:
+        -
+          name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  example: 'Иван Иванов'
+                places:
+                  type: array
+                  items: { type: integer, example: 1 }
+              type: object
+            example:
+              name: 'Иван Иванов'
+              places:
+                - 1
+                - 2
+                - 3
+      responses:
+        '200':
+          description: 'Успешное бронирование'
+          content:
+            application/json:
+              schema:
+                properties:
+                  response: { properties: { success: { type: boolean, example: true }, reservation_id: { type: string, example: 5d519fe58e3cf } }, type: object }
+                type: object
+        '422':
+          description: 'Ошибка валидации'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'The given data was invalid.' }
+                  errors: { type: object, additionalProperties: { type: string } }
+                type: object
+        '500':
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Place #5 not available' }
+                type: object
+  /shows:
+    get:
+      tags:
+        - Мероприятия
+      summary: 'Получить список мероприятий'
+      operationId: 67718feb3e19cb407d0d621dd243a5b5
+      responses:
+        '200':
+          description: 'Успешный ответ со списком мероприятий'
+          content:
+            application/json:
+              schema:
+                properties:
+                  response: { type: array, items: { properties: { id: { type: integer, example: 1 }, name: { type: string, example: 'Show #1' } }, type: object } }
+                type: object
+        '500':
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Something went wrong' }
+                type: object
+tags:
+  -
+    name: Мероприятия
+    description: Мероприятия
