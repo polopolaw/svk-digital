@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
 use App\Contracts\Booking\BookingClientContract;
@@ -8,7 +10,7 @@ use App\Http\Controllers\Api\V1\ShowController;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
-class ShowControllerTest extends TestCase
+final class ShowControllerTest extends TestCase
 {
     private MockInterface $bookingClientMock;
 
@@ -16,11 +18,11 @@ class ShowControllerTest extends TestCase
     {
         parent::setUp();
         $this->bookingClientMock = $this->mock(BookingClientContract::class);
-        $this->controller = new ShowController();
+        $this->controller = new ShowController;
     }
 
     /** @test */
-    public function it_returns_successful_response_with_shows_list()
+    public function it_returns_successful_response_with_shows_list(): void
     {
         $data = [
             ['id' => 1, 'name' => 'Test Show 1'],
@@ -39,13 +41,12 @@ class ShowControllerTest extends TestCase
 
         $response = $this->get(route('shows.index'));
 
-
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(['response' => $data], $response->json());
     }
 
     /** @test */
-    public function it_handles_empty_shows_list()
+    public function it_handles_empty_shows_list(): void
     {
         $this->bookingClientMock
             ->shouldReceive('shows')

@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Api\Booking;
 
-use App\Api\Booking\LeadBook\DTOs\Reservation;
 use App\Api\Exceptions\ExternalApiError;
 use App\Api\Exceptions\ReservationFailedException;
 use App\Contracts\Booking\BookingClientContract;
@@ -18,19 +18,16 @@ use Illuminate\Support\Facades\Http;
 final class Client implements BookingClientContract
 {
     private PendingRequest $client;
+
     public function __construct(
         private readonly string $host,
     ) {
         $this->client = Http::withHeaders(['Authorization' => $this->getToken(), 'Content-Type' => 'application/json']);
     }
 
-    private function getToken(): string
-    {
-        return "Bearer pmN3TQFQalcOhCwZc18KcPMWZyG2EQHz8al9sCYw"; // todo реализация поучения токена
-    }
-
     /**
-     * @param array<string, mixed> $params
+     * @param  array<string, mixed>  $params
+     *
      * @throws ExternalApiError
      */
     public function shows(array $params = []): array
@@ -47,7 +44,8 @@ final class Client implements BookingClientContract
     }
 
     /**
-     * @param array<string, mixed> $params
+     * @param  array<string, mixed>  $params
+     *
      * @throws ExternalApiError
      */
     public function events(int $showId, array $params = []): array
@@ -64,7 +62,8 @@ final class Client implements BookingClientContract
     }
 
     /**
-     * @param array<string, mixed> $params
+     * @param  array<string, mixed>  $params
+     *
      * @throws ExternalApiError
      */
     public function places(int $eventId, array $params = []): array
@@ -96,6 +95,11 @@ final class Client implements BookingClientContract
         }
     }
 
+    private function getToken(): string
+    {
+        return 'Bearer pmN3TQFQalcOhCwZc18KcPMWZyG2EQHz8al9sCYw'; // todo реализация поучения токена
+    }
+
     /**
      * @throws ExternalApiError|ReservationFailedException
      */
@@ -103,10 +107,11 @@ final class Client implements BookingClientContract
     {
         if (! isset($response['response'])) {
             logger()->error("Wrong response format {$aggregation}", $response);
-            throw new ExternalApiError($response['error'] ?? "Something went wrong");
+            throw new ExternalApiError($response['error'] ?? 'Something went wrong');
         } // todo завязка на формат ответа глобально, но решил что это не большая проблема тут
 
         $data = $response['response'];
+
         return match ($aggregation) {
             'shows' => array_map(fn (array $item) => app(ShowContract::class, $item), $data),
             'events' => array_map(fn (array $item) => app(EventContract::class, $item), $data),

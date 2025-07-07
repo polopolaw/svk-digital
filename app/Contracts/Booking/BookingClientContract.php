@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Contracts\Booking;
@@ -15,7 +16,6 @@ interface BookingClientContract
 
     /** @return array<EventContract> */
     public function events(int $showId, array $params = []): array;
-
 
     /** @return array<PlaceContract> */
     public function places(int $eventId, array $params = []): array;

@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Api\Booking\LeadBook\DTOs;
 
 use App\Contracts\Booking\ReservationRequestRequestContract;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
 
-readonly class ReservationRequestData implements ReservationRequestRequestContract, Responsable, Arrayable
+final readonly class ReservationRequestData implements Arrayable, ReservationRequestRequestContract, Responsable
 {
     public string $name;
+
     public array $places;
+
     public function __construct(array $data)
     {
         if (! isset($data['name']) || ! isset($data['places'])) {

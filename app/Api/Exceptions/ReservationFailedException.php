@@ -1,8 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Api\Exceptions;
 
-class ReservationFailedException extends \Exception
-{
-
-}
+final class ReservationFailedException extends \Exception {}

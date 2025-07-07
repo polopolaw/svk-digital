@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Api\V1\EventController;
 use App\Http\Controllers\Api\V1\PlaceController;
 use App\Http\Controllers\Api\V1\ShowController;
 use Illuminate\Support\Facades\Route;
 
-
-
-
-Route::prefix('v1')->group(function () {
-    Route::prefix('shows')->group(function () {
+Route::prefix('v1')->group(function (): void {
+    Route::prefix('shows')->group(function (): void {
         Route::get('/', [ShowController::class, 'index'])
             ->name('shows.index');
 
@@ -18,7 +17,7 @@ Route::prefix('v1')->group(function () {
             ->where('showId', '[0-9]+');
     });
 
-    Route::prefix('events')->group(function () {
+    Route::prefix('events')->group(function (): void {
         Route::get('/{eventId}/places', [PlaceController::class, 'index'])
             ->name('events.places.index')
             ->where('eventId', '[0-9]+');
@@ -29,6 +28,4 @@ Route::prefix('v1')->group(function () {
     });
 });
 
-Route::get('/health', function () {
-    return response()->json(['status' => 'ok']);
-});
+Route::get('/health', fn () => response()->json(['status' => 'ok']));

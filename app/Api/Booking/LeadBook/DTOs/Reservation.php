@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Api\Booking\LeadBook\DTOs;
+declare(strict_types=1);
 
+namespace App\Api\Booking\LeadBook\DTOs;
 
 use App\Api\Exceptions\ReservationFailedException;
 use App\Contracts\Booking\ReservationContract;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
 
-readonly class Reservation implements ReservationContract, Responsable, Arrayable
+final readonly class Reservation implements Arrayable, ReservationContract, Responsable
 {
     public string $reservationId;
 
@@ -18,7 +19,7 @@ readonly class Reservation implements ReservationContract, Responsable, Arrayabl
     public function __construct(array $data)
     {
         if ($data['success'] !== true) {
-            throw new ReservationFailedException();
+            throw new ReservationFailedException;
         }
         $this->reservationId = $data['reservation_id'];
     }
@@ -33,4 +34,3 @@ readonly class Reservation implements ReservationContract, Responsable, Arrayabl
         return ['reservation_id' => $this->reservationId];
     }
 }
-
