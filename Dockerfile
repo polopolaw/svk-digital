@@ -43,9 +43,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     exif \
     sockets \
     opcache \
-    pcntl \
-    php-redis
-
+    pcntl
 
 FROM base AS local
 
