@@ -2,6 +2,7 @@
 1. ``cp .env.example .env``
 2. Setup .env values for current user UID GUID
 3. ``docker compose up -d``
+4. Setup APP_ENV=production for better error handling experience (on local env error stacktrace may be bloated)
 4. Go to http://127.0.0.1:9000
 
 #### Optional
